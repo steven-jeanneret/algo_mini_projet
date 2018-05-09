@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <set>
 #include <map>
+#include <limits>
 
 template<class T>
 class MiniProjet {
@@ -25,7 +26,8 @@ private:
 public:
     MiniProjet() {
         graph = new Graph<std::string, int>(true);
-        readFileToGraph(graph);
+        readFileToGraph(graph); //Phase 1
+        minimalRecoverGraph(graph); //Phase 2
     }
 
     void readFileToGraph(Graph<std::string, int> *graph) {
@@ -87,12 +89,55 @@ public:
                 std::cout << *it << ",";
                 it++;
             }
-
             myFile.close();
-
-            exportCircoGraph();
-
+            exportCircoGraph(1);
         }
+    }
+
+    int isOnlyOne(std::vector<Graph<std::string, int>::Vertex *> *pVector, Graph<std::string, int>::Edge *pEdge) {
+        int verif = 0;
+        int index = -1;
+        for (int i = 0; i < pVector->size(); i++) {
+            if (pVector->at(i) == pEdge->get_source()) {
+                verif++;
+                index = 0;
+            }
+            if (pVector->at(i) == pEdge->get_destination()) {
+                verif++;
+                index = 1;
+            }
+        }
+        if (verif == 1) {
+            return index;
+        }
+        return -1;
+    }
+
+    void minimalRecoverGraph(Graph<std::string, int> *g) {
+        auto vertexInTree = new std::vector<Graph<std::string, int>::Vertex *>();
+        auto edgeInTree = new std::set<Graph<std::string, int>::Edge *>();
+        vertexInTree->push_back(g->get_vertex(0));
+        while (vertexInTree->size() < g->num_vertices()) {
+            int min = std::numeric_limits<int>::max();
+            Graph<std::string, int>::Vertex *v;
+            Graph<std::string, int>::Edge *e;
+            for (auto vi = g->vertex_iterator(); vi.has_next(); vi.next()) {
+                auto vert = vi.current();
+                for (auto ni = vert->neighbor_iterator(); ni.has_next(); ni.next()) {
+                    int iTemp = isOnlyOne(vertexInTree, ni.current());
+                    if (iTemp >= 0) {
+                        if (ni.current()->get_weight() < min) {
+                            min = ni.current()->get_weight();
+                            e = ni.current();
+                            v = (iTemp == 1) ? ni.current()->get_source() : v = ni.current()->get_destination();
+                        }
+                    }
+                }
+            }
+            vertexInTree->push_back(v);
+            edgeInTree->insert(e);
+        }
+        exportCircoGraph(2, edgeInTree);
     }
 
     void affiche(Graph<std::string, int> *g) {
@@ -109,10 +154,10 @@ public:
         }
     }
 
-    void exportCircoGraph() {
+    void exportCircoGraph(int state, std::set<Graph<std::string, int>::Edge *> *edges = nullptr) {
         std::string lien = " -- ";
         std::ofstream myFile;
-        std::string fileName = getOutputFileName();
+        std::string fileName = getOutputFileName(state);
         try {
             myFile.open(fileName);
         } catch (const std::exception &e) {
@@ -129,7 +174,15 @@ public:
                     auto neighbor_edge = ni.current();
                     auto neighbor = neighbor_edge->get_destination(curr);
                     myFile << "\t" << curr->get_value() << lien << neighbor->get_value() << " [label="
-                           << neighbor_edge->get_weight() << "]\n";
+                           << neighbor_edge->get_weight();
+
+                    if (state == 2) {
+                        if (std::find(edges->begin(), edges->end(), neighbor_edge) != edges->end()) {
+                            myFile << ",penwith=3,color=\"red\"";
+                        }
+                    }
+
+                    myFile << "]\n";
                 }
             }
             myFile << "}";
@@ -139,7 +192,21 @@ public:
         }
     }
 
-    std::string getFileName(std::string s = "test.dot") {
+    bool isMinimalEdge(Graph<std::string, int>::Vertex *src, Graph<std::string, int>::Vertex *dest) {
+        int minimalValue = src->get_edge(0)->get_weight();
+        int actualValue;
+        for (auto ni = src->neighbor_iterator(); ni.has_next(); ni.next()) {
+            if (minimalValue > ni.current()->get_weight()) {
+                minimalValue = ni.current()->get_weight();
+            }
+            if (ni.current()->get_destination() == dest) {
+                actualValue = ni.current()->get_weight();
+            }
+        }
+        return minimalValue == actualValue;
+    }
+
+    std::string getFileName(std::string s = "test") {
         //std::string fileName = "/home/steven/Documents/2/Algorithme/miniproject/" + s;
         std::string fileName = getCurrentPath() + "/../" + s;
         std::string input = "";
@@ -159,11 +226,14 @@ public:
         return fileName;
     }
 
-    std::string getInputFileName(std::string s = "test.dot") {
+    std::string getInputFileName(std::string s = "test") {
+        s += ".dot";
         return getFileName(s);
     }
 
-    std::string getOutputFileName(std::string s = "graph_circo.dot") {
+    std::string getOutputFileName(int state, std::string s = "graph_circo") {
+        s += "_state_" + std::to_string(state) + ".dot";
         return getFileName(s);
     }
+
 };

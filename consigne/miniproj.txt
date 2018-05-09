@@ -1,0 +1,53 @@
+Vous recevrez un graphe non dirigé dans lequel les sommets sont des personnes. Chaque personne se communique avec un certain nombre d'autres personnes. Les arêtes representent le nombre moyen de communications par année que chaque personne a eu avec une autre.
+
+Vous recevrez des graphes sous la forme d'un fichier GraphViz simplifié, dans lequel vous n'aurez que les arêtes. Par exemple :
+
+graph {
+	labelloc="t";labeljust="l";label="np=8 l=2-4 m=20-40"
+	Antoine -- Hilda [label=40]
+	Antoine -- Charles [label=36]
+	Antoine -- Gustave [label=20]
+	Antoine -- Florence [label=33]
+	Brigitte -- Hilda [label=21]
+	Brigitte -- Florence [label=38]
+	Charles -- Gustave [label=38]
+	Charles -- Florence [label=20]
+	Diane -- Florence [label=22]
+	Diane -- Hilda [label=25]
+	Diane -- Brigitte [label=32]
+	Diane -- Edgar [label=30]
+	Diane -- Charles [label=29]
+	Edgar -- Hilda [label=39]
+	Gustave -- Brigitte [label=25]
+}
+
+Pour afficher le graphe, utilisez l'outil "circo". Il fait une distribution circulaire des sommets.
+
+
+== Phase 1: afficher le graphe ==
+
+Vous dever lire le fichier, construire le graphe en mémoire, puis tout simplement l'afficher, sous la forme GraphViz.
+
+
+== Phase 2: arbre recouvrant de poids minimum ==
+
+Avec le graphe en mémoire, trouver l'arbre recouvrant de poids minimum (ARPM), puis afficher cet arbre. L'arbre devra être affiché sur le graphe, dans le format GraphViz. Pour marquer les arêtes qui font partie de l'arbre couvrant, utiliser les attributes "penwidth" et "color". par exemple :
+
+	Antoine -- Gustave [label=20, penwidth=3, color="red"]
+
+
+== Phase 3: chemin le plus court ==
+
+Trouver l'arbre des chemins les plus courts (ACPC) de tous sommets vers un sommé donné. Afficher l'arbre, comme pour la phase 2.
+
+
+== Phase 4: chemin minimal au pivot ==
+
+Pour ce mini-projet, nous appelerons de "pivot" le sommet pour lequel l'ACPC est minimum. Vous devez trouver tous les ACPCs (un pour chaque sommet), puis calculer l'addition du poids de toutes ses arêtes. On appelera d'arbre minimal au pivot (AMP) l'ACPC vers le pivot.
+
+4.a) lire le fichier d'entré.
+4.b) calculer un arbre recouvrant de poids minimum (ARPM).
+4.c) afficher l'ARPM, avec le somatoire des poids des arêtes.
+4.d) calculer les arbres des chemins plus courts (ACPC) pour tous les sommets.
+4.e) trouver le pivot (ACPC de poids minimum).
+4.f) afficher l'ACPC du pivot.

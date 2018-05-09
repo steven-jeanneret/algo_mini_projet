@@ -1,19 +1,4 @@
 graph {
 	labelloc="t";labeljust="l";label="np=8 l=2-4 m=20-40"
 	layout="circo"
-	Antoine -- Hilda [label=40]
-	Antoine -- Charles [label=36]
-	Antoine -- Gustave [label=20]
-	Antoine -- Florence [label=33]
-	Charles -- Gustave [label=38]
-	Charles -- Florence [label=20]
-	Gustave -- Brigitte [label=25]
-	Brigitte -- Hilda [label=21]
-	Brigitte -- Florence [label=38]
-	Diane -- Florence [label=22]
-	Diane -- Hilda [label=25]
-	Diane -- Brigitte [label=32]
-	Diane -- Edgar [label=30]
-	Diane -- Charles [label=29]
-	Edgar -- Hilda [label=39]
 }
