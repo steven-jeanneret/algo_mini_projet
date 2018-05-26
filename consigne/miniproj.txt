@@ -48,6 +48,6 @@ Pour ce mini-projet, nous appelerons de "pivot" le sommet pour lequel l'ACPC est
 4.a) lire le fichier d'entré.
 4.b) calculer un arbre recouvrant de poids minimum (ARPM).
 4.c) afficher l'ARPM, avec le somatoire des poids des arêtes.
-4.d) calculer les arbres des chemins plus courts (ACPC) pour tous les sommets.
+4.d) calculer les arbres des chemins plus courts (ACPC) pour tous les sommets.<
 4.e) trouver le pivot (ACPC de poids minimum).
 4.f) afficher l'ACPC du pivot.
